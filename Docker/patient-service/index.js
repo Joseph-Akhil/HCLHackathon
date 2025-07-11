@@ -59,12 +59,4 @@ const express = require('express');
     app.listen(port, '0.0.0.0', () => {
       console.log(`Patient service listening at http://0.0.0.0:${port}`);
     });
-    module.exports = app;
-    const serverlessExpress = require('aws-serverless-express');
-const app = require('./index');
-const server = serverlessExpress.createServer(app);
-
-exports.handler = (event, context) => {
-  return serverlessExpress.proxy(server, event, context);
-};
-
+    

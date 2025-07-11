@@ -12,4 +12,4 @@ RUN npm install
 COPY . .
 
 # Specify the Lambda handler file and function
-CMD ["lambda.handler"]
+CMD ["index.handler"]
