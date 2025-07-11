@@ -1,0 +1,5 @@
+cred.txt
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+
+*.log
