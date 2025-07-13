@@ -35,3 +35,4 @@ resource "aws_lambda_permission" "apigw_patient" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
+

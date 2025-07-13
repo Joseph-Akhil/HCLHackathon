@@ -1,8 +1,9 @@
+#APIGatewayV2
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "microservices-api"
   protocol_type = "HTTP"
 }
-
+#APIGatewayV2 Integration Appointment Service
 resource "aws_apigatewayv2_integration" "appointment_integration" {
   api_id             = aws_apigatewayv2_api.http_api.id
   integration_type   = "AWS_PROXY"
@@ -10,7 +11,7 @@ resource "aws_apigatewayv2_integration" "appointment_integration" {
   integration_method = "POST"
   payload_format_version = "2.0"
 }
-
+#APIGatewayV2 Integration Patient Service
 resource "aws_apigatewayv2_integration" "patient_integration" {
   api_id             = aws_apigatewayv2_api.http_api.id
   integration_type   = "AWS_PROXY"
@@ -30,3 +31,10 @@ resource "aws_apigatewayv2_route" "patient_route" {
   route_key = "POST /patient"
   target    = "integrations/${aws_apigatewayv2_integration.patient_integration.id}"
 }
+
+resource "aws_apigatewayv2_stage" "default" {
+  api_id      = aws_apigatewayv2_api.http_api.id
+  name        = "$default"
+  auto_deploy = true
+}
+
