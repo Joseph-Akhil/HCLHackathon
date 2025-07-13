@@ -1,0 +1,35 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "us-east-1"
+    APPOINTMENT_IMAGE: "appointmentservice"
+    PATIENT_IMAGE: "patientservice"
+    ECR_REGISTRY: "528757809395.dkr.ecr.us-east-1.amazonaws.com"
+
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+    commands:
+      - echo Logging into Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+  pre_build:
+    commands:
+      - echo Building Docker images...
+      - cd services/appointmentservice && DOCKER_BUILDKIT=0 docker build -t $ECR_REGISTRY/$APPOINTMENT_IMAGE:latest .
+      - cd ../patientservice && DOCKER_BUILDKIT=0 docker build -t $ECR_REGISTRY/$PATIENT_IMAGE:latest .
+
+  build:
+    commands:
+      - echo Pushing images to ECR...
+      - docker push $ECR_REGISTRY/$APPOINTMENT_IMAGE:latest
+      - docker push $ECR_REGISTRY/$PATIENT_IMAGE:latest
+
+  post_build:
+    commands:
+      - echo Applying Terraform...
+      - cd ../../terraform
+      - terraform init
+      - terraform apply -auto-approve
